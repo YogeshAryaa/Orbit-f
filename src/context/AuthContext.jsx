@@ -1,0 +1,9 @@
+import {createContext,useCallback,useContext,useEffect,useState} from 'react';import {authApi,userApi} from '../api/index.js';import {tokenStore,errorMessage} from '../api/client.js';
+const C=createContext(null);export const AuthProvider=({children})=>{const [user,setUser]=useState(null);const [loading,setLoading]=useState(true);const [token,setToken]=useState(tokenStore.get());const [authError,setAuthError]=useState('');
+const accept=useCallback(data=>{const t=data?.token;if(t){tokenStore.set(t);setToken(t);}if(data?.user)setUser(data.user);return data;},[]);
+const refresh=useCallback(async()=>{if(!tokenStore.get()){setLoading(false);return;}try{const u=await userApi.me();setUser(u?.user||u);setToken(tokenStore.get());}catch{tokenStore.set(null);setToken(null);setUser(null);}finally{setLoading(false);}},[]);
+useEffect(()=>{refresh();const expire=()=>{setToken(null);setUser(null);setAuthError('Your session expired or was revoked. Please sign in again.');};window.addEventListener('chat:session-expired',expire);return()=>window.removeEventListener('chat:session-expired',expire);},[refresh]);
+const login=async(identifier,password)=>{setAuthError('');try{return accept(await authApi.login({identifier,password}));}catch(e){setAuthError(errorMessage(e));throw e;}};
+const register=async body=>{setAuthError('');try{return accept(await authApi.register(body));}catch(e){setAuthError(errorMessage(e));throw e;}};
+const logout=async all=>{try{if(tokenStore.get())all?await authApi.logoutAll():await authApi.logout();}finally{tokenStore.set(null);setToken(null);setUser(null);setAuthError('');}};
+const reloadUser=async()=>{const u=await userApi.me();setUser(u?.user||u);};return <C.Provider value={{user,setUser,token,loading,authError,login,register,logout,reloadUser}}>{children}</C.Provider>;};export const useAuth=()=>useContext(C);

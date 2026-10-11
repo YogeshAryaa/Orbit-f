@@ -1,0 +1,1 @@
+import {Navigate,Outlet} from 'react-router-dom';import {useAuth} from '../context/AuthContext.jsx';export default function ProtectedRoute(){const {token,loading}=useAuth();if(loading)return <div className="screen-center"><div className="spinner"/><span>Loading your workspace…</span></div>;return token?<Outlet/>:<Navigate to="/login" replace/>;}

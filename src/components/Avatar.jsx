@@ -1,0 +1,1 @@
+export default function Avatar({user,size='md',online=false}){const name=user?.displayName||user?.username||user?.title||'?';return <div className={`avatar avatar-${size}`}>{user?.avatarUrl?<img src={user.avatarUrl} alt=""/>:<span>{name.slice(0,1).toUpperCase()}</span>}{online&&<i className="online-dot"/>}</div>}
