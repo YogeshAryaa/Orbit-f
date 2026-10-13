@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Bell, Shield, Smartphone, UserRound, Flag, LockKeyhole, CheckCircle2, Trash2, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Bell, Shield, Smartphone, UserRound, Flag, LockKeyhole, CheckCircle2, Trash2, RefreshCw, Palette, MessageSquare, KeyRound, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
