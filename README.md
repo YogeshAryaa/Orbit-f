@@ -44,7 +44,7 @@ Set `VITE_API_BASE_URL` and `VITE_SOCKET_URL` to the backend's public API and So
 ## Functional areas
 - **Messaging:** REST history, Socket.IO new-message events, local decryption, reply, edit, delete, reactions, local search, forwarding with re-encryption for the destination conversation, and encrypted attachments.
 - **Group E2EE:** message content-key envelopes are created for each member device returned by the backend. All recipients must have registered public device keys. This is a custom envelope design, not a ratcheting Signal session.
-- **Voice/video:** the chat uses the backend's `call:signal` relay to exchange SDP and ICE candidates and creates browser RTCPeerConnections for one-to-one calls. TURN is required for reliable connections across restrictive NATs/firewalls. Group calls are not supported.
+- **Voice/video:** direct chats use one-to-one WebRTC calls; group chats support audio/video calls using a peer-to-peer mesh. Group mesh bandwidth and device load grow with participant count, so use an SFU for larger groups. Configure TURN for reliable connections across restrictive NATs/firewalls.
 - **Push:** service-worker notifications and subscription controls are included. This requires browser permission, HTTPS, a public VAPID key in the frontend, and correctly configured private VAPID credentials on the backend.
 - **Privacy:** profile-photo/last-seen/read-receipt/phone discoverability controls use the backend's supported fields.
 - **Devices:** view and revoke registered public device keys. Revoking keys may make old encrypted messages unreadable from that device.
@@ -62,7 +62,7 @@ These commands must be run locally after dependencies install. The archive was p
 
 ## Important production gaps
 - No Signal Protocol / Double Ratchet implementation or independent cryptographic audit.
-- No group audio/video calling or SFU architecture.
+- No SFU is included; group calls use peer-to-peer mesh and are intended for small groups.
 - No robust identity safety-number verification or private-key recovery.
 - Prekey replenishment and key rotation need a tested lifecycle.
 - Push delivery depends on backend VAPID and browser/service-worker configuration.
