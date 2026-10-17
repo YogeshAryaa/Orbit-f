@@ -81,8 +81,8 @@ export default function CallOverlay({ call, localStream, remoteStream, remoteStr
         <header>
           <div>
             <small>ORBIT SECURE CALL</small>
-            <h2>{call.incoming ? 'Incoming call' : call.status === 'calling' ? 'Calling…' : call.status === 'connecting' ? 'Connecting…' : 'In call'}</h2>
-            <p>{call.kind === 'video' ? 'Video call' : 'Voice call'}{call.group ? ` · ${streams.length + 1} participants` : ''} · {call.status === 'connecting' ? clock : 'Waiting for connection'}</p>
+            <h2>{call.incoming ? (call.caller?.displayName || call.caller?.username || 'Incoming call') : call.status === 'calling' ? 'Calling…' : call.status === 'connecting' ? 'Connecting…' : 'In call'}</h2>
+            <p>{call.incoming ? `Incoming ${call.kind === 'video' ? 'video' : 'voice'} call${call.group ? ' (Group)' : ''}` : (call.kind === 'video' ? 'Video call' : 'Voice call')}{call.group ? ` · ${streams.length + 1} participants` : ''} · {call.status === 'connecting' ? clock : 'Waiting for connection'}</p>
           </div>
           <button className="icon-btn" onClick={onEnd} aria-label="Close call"><X/></button>
         </header>
@@ -93,7 +93,15 @@ export default function CallOverlay({ call, localStream, remoteStream, remoteStr
             <VideoElement stream={localStream} muted className="local-video"/>
           </div>
         )}
-        {call.kind !== 'video' && <div className="call-avatar"><Phone size={34}/></div>}
+        {call.kind !== 'video' && (
+          <div className="call-avatar" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {call.caller?.avatarUrl ? (
+              <img src={call.caller.avatarUrl} alt="Caller avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }}/>
+            ) : (
+              <Phone size={34}/>
+            )}
+          </div>
+        )}
         {call.incoming ? (
           <div className="call-controls">
             <button className="call-accept" onClick={handleAccept}><Phone/> Accept</button>
