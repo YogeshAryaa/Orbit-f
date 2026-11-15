@@ -8,3 +8,4 @@ export const uploadApi={upload:file=>{const fd=new FormData();fd.append('file',f
 export const e2eeApi={registerDevice:b=>call(api.post('/e2ee/devices',b)),devices:()=>call(api.get('/e2ee/devices')),deleteDevice:id=>call(api.delete(`/e2ee/devices/${encodeURIComponent(id)}`)),addPrekeys:b=>call(api.post('/e2ee/devices/prekeys',b)),bundles:id=>call(api.get(`/e2ee/users/${id}/bundles`))};
 export const healthApi={get:()=>call(api.get('/health'))};
 export const moderationApi={reports:(status='open')=>call(api.get('/users/moderation/reports',{params:{status}})),updateReport:(id,status)=>call(api.patch(`/users/moderation/reports/${id}`,{status}))};
+export const statusApi={create:b=>call(api.post('/status',b)),mine:()=>call(api.get('/status/mine')),all:()=>call(api.get('/status/all')),view:id=>call(api.post(`/status/${id}/view`)),remove:id=>call(api.delete(`/status/${id}`))};
